@@ -18,15 +18,17 @@ def tear_down(_=None):
 
 
 @app.errorhandler(404)
-def page_not_found(e):
+def page_not_found(_):
     """custom error page with http responde's code of 404"""
     return make_response(jsonify({'error': 'Not found'}), 404)
+
 
 @app.errorhandler(400)
 def bad_request(e):
     """custom error page with http responde's code of 400"""
     return make_response(jsonify({'error': "{}".format(
         e.__dict__['description'])}), 400)
+
 
 if __name__ == "__main__":
     host = getenv("HBNB_API_HOST") or '0.0.0.0'

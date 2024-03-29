@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 """index file"""
+from datetime import datetime
 from flask import jsonify, abort, request
 from werkzeug.exceptions import BadRequest
 from api.v1.views import app_views
-from models import storage
 from models.city import City
-from models.place import Place
 from models.state import State
+from models import storage
 
 
 @app_views.route('/states/<state_id>/cities', methods=['GET', 'POST'],
@@ -14,9 +14,10 @@ from models.state import State
 def cities(state_id):
     """Retrieves the list of all City objects of a State with GET request
     create a new city with POST request"""
+
     state = storage.get(State, state_id)
     if state is None:
-        abort(404)
+        raise abort(404)
 
     if request.method == 'GET':
         cities_list = state.cities
@@ -48,10 +49,10 @@ def city(city_id):
     """Retrieves the list of all City objects of a State"""
     city = storage.get(City, city_id)
     if city is None:
-        abort(404)
+        raise abort(404)
 
     if request.method == 'GET':
-        return jsonify(city.to_dict())
+        return jsonify(city.to_dict()), 200
 
     if request.method == 'DELETE':
         storage.delete(city)
@@ -73,6 +74,9 @@ def city(city_id):
 
         for key, value in data.items():
             setattr(city, key, value)
+
+        # I've noticed in the example that updated_at attribute get updated.
+        setattr(city, 'updated_at', datetime.utcnow())
 
         storage.new(city)
         storage.save()
