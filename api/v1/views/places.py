@@ -3,6 +3,7 @@
 from flask import abort, jsonify, request
 from api.v1.views import app_views
 from models import storage
+from models.amenity import Amenity
 from models.city import City
 from models.place import Place
 from models.user import User
@@ -86,3 +87,43 @@ def delete_place(place_id):
             storage.save()
             return jsonify({}), 200
     abort(404)
+
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def retrieve_places():
+    """ retrieves all Place objects depending of
+    the JSON in the body of the request."""
+    req = request.get_json(silent=True)
+    if req is None:
+        raise abort(400, description="Not a JSON")
+
+    places_list = []
+    for place in storage.all(Place).values():
+        if 'states' in req and len(req['states']) > 0:
+            for state_id in req['states']:
+                city = storage.get(City, place.city_id)
+                if city.state_id == state_id:
+                    places_list.append(place)
+        if 'cities' in req and len(req['cities']) > 0:
+            for city_id in req['cities']:
+                if city_id == place.city_id and place not in places_list:
+                    places_list.append(place)
+        if 'states' not in req or len(req['states']) == 0:
+            if 'cities' not in req or len(req['cities']) == 0:
+                places_list.append(place)
+
+    delete_list = []
+    if 'amenities' in req and len(req['amenities']) > 0:
+        for amenity_id in req['amenities']:
+            amenity = storage.get(Amenity, amenity_id)
+            for place in places_list:
+                if amenity not in place.amenities:
+                    delete_list.append(place)
+                    break
+
+    final_list = []
+    for place in places_list:
+        if place not in delete_list:
+            final_list.append(place)
+
+    return jsonify([place.to_dict() for place in final_list]), 200
