@@ -114,9 +114,9 @@ def retrieve_places():
 
     delete_list = []
     if 'amenities' in req and len(req['amenities']) > 0:
-        for amenity_id in req['amenities']:
-            amenity = storage.get(Amenity, amenity_id)
-            for place in places_list:
+        for place in places_list:
+            for amenity_id in req['amenities']:
+                amenity = storage.get(Amenity, amenity_id)
                 if amenity not in place.amenities:
                     delete_list.append(place)
                     break
@@ -124,6 +124,6 @@ def retrieve_places():
     final_list = []
     for place in places_list:
         if place not in delete_list:
-            final_list.append(place)
+            final_list.append(place.to_dict())
 
-    return jsonify([place.to_dict() for place in final_list]), 200
+    return jsonify(final_list), 200
