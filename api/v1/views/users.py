@@ -48,7 +48,7 @@ def update_user(user_id):
         raise abort(400, description="Not a JSON")
     for user in storage.all(User).values():
         if user.id == user_id:
-            ignore = ['id', 'created_at', 'email']
+            ignore = ['id', 'created_at', 'email', 'updated_at']
             for k, v in user_dict.items():
                 if k not in ignore:
                     setattr(user, k, v)
