@@ -11,13 +11,13 @@ from models.user import User
 from models.amenity import Amenity
 
 
-@app_views.route('/status')
+@app_views.route('/status', strict_slashes=False)
 def status_1():
     """return status ok and 200 response thx to jsonify"""
-    return jsonify({'status': 'OK'})
+    return jsonify({'status': 'OK'}), 200
 
 
-@app_views.route('/stats')
+@app_views.route('/stats', strict_slashes=False)
 def status_2():
     """ return number of each object below"""
     return jsonify({
@@ -27,4 +27,4 @@ def status_2():
         "reviews": storage.count(Review),
         "states": storage.count(State),
         "users": storage.count(User)
-        })
+        }), 200

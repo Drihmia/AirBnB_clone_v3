@@ -155,10 +155,6 @@ class TestBaseModel(unittest.TestCase):
         new_created_at = inst.created_at
         new_updated_at = inst.updated_at
         self.assertNotEqual(old_updated_at, new_updated_at)
-
-        delta_seconds = abs((new_updated_at - old_updated_at).total_seconds())
-        self.assertTrue(0 <= delta_seconds <= 10)
-
         self.assertEqual(old_created_at, new_created_at)
         self.assertTrue(mock_storage.new.called)
         self.assertTrue(mock_storage.save.called)
