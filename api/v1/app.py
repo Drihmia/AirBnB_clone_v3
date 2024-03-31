@@ -33,4 +33,4 @@ def bad_request(e):
 if __name__ == "__main__":
     host = getenv("HBNB_API_HOST") or '0.0.0.0'
     port = int(getenv("HBNB_API_PORT") or 5000)  # to avoid linter warnings.
-    app.run(host=host, port=port, threaded=True, debug=True)
+    app.run(host=host, port=port, threaded=True)
