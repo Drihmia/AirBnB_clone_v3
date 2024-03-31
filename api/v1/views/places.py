@@ -3,7 +3,6 @@
 from flask import abort, jsonify, request
 from api.v1.views import app_views
 from models import storage
-from models.amenity import Amenity
 from models.city import City
 from models.place import Place
 from models.user import User
@@ -116,14 +115,14 @@ def retrieve_places():
     if 'amenities' in req and len(req['amenities']) > 0:
         for place in places_list:
             for amenity_id in req['amenities']:
-                amenity = storage.get(Amenity, amenity_id)
-                if amenity not in place.amenities:
+                if amenity_id not in [amen.id for amen in place.amenities]:
                     delete_list.append(place)
                     break
 
     final_list = []
     for place in places_list:
         if place not in delete_list:
+            del place.amenities
             final_list.append(place.to_dict())
 
     return jsonify(final_list), 200
