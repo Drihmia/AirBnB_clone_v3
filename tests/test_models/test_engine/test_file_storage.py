@@ -141,7 +141,7 @@ class TestFileStorage(unittest.TestCase):
         storage = FileStorage()
         nonexistent_user_id = "nonexistent_id"
         retrieved_user = storage.get(User, nonexistent_user_id)
-        self.assertEqual(retrieved_user, "Not Found")
+        self.assertEqual(retrieved_user, None)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_get_different_object_with_correct_id(self):
@@ -153,7 +153,7 @@ class TestFileStorage(unittest.TestCase):
         storage.new(user1)
         storage.save()
         retrieved_user = storage.get(User, user2.id)
-        self.assertEqual(retrieved_user, "Not Found")
+        self.assertEqual(retrieved_user, None)
 
     @unittest.skipIf(models.storage_t == 'db', "not testing file storage")
     def test_count_specific_class(self):
