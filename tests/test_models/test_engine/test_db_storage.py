@@ -75,7 +75,8 @@ class TestDbStorage(unittest.TestCase):
         """Clean up after each test method"""
         # Delete any objects created during the test
         for obj in created_objs:
-            i_storage.delete(obj)
+            pass
+        # i_storage.delete(obj)
         # print([ (i, i.name) for i in created_objs])
         # Commit changes
         i_storage.save()
@@ -127,8 +128,8 @@ class TestDbStorage(unittest.TestCase):
             self.assertEqual(state_c_2.name, state_2.name)
 
         # Delete recently created 2 states.
-        i_storage.delete(state_1)
-        i_storage.delete(state_2)
+        # i_storage.delete(state_1)
+        # i_storage.delete(state_2)
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
@@ -202,7 +203,6 @@ class TestDbStorage(unittest.TestCase):
 
         # Create a new object
         state_L = State(name="Larache")
-        created_objs.append(state_L)
         state_L_id = state_L.id
         key = "State.{}".format(state_L_id)
 
